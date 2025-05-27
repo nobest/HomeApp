@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">HomeApp</string>
+    <string name="onboarding_fragment_label">Onboarding</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Continue</string>
+    <string name="finish">Finish</string>
+    <string name="step_two_instruction">To continue, set the app as your default home.</string>
+    <string name="onboarding_step_3_message">Thanks for setting as default home.</string>
+    <string name="minimalist_home">Minimalist Home</string>
+    <string name="welcome_to_homeapp">Welcome to HomeApp.</string>
+</resources>
