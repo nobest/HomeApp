@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/OnboardingFragment">
+
+    <fragment
+        android:id="@+id/OnboardingFragment"
+        android:name="com.meticulous.homeapp.onboarding.OnboardingFragment"
+        android:label="@string/onboarding_fragment_label"
+        tools:layout="@layout/fragment_onboarding">
+
+        <action
+            android:id="@+id/action_OnboardingFragment_to_Step1Fragment"
+            app:destination="@id/OnboardingFragmentStep1" />
+    </fragment>
+    <fragment
+        android:id="@+id/OnboardingFragmentStep1"
+        android:name="com.meticulous.homeapp.onboarding.OnboardingStepOneFragment"
+        android:label="@string/onboarding_fragment_label"
+        tools:layout="@layout/fragment_onboarding">
+
+        <action
+            android:id="@+id/action_Step1Fragment_to_Step2Fragment"
+            app:destination="@id/OnboardingFragmentStep2" />
+    </fragment>
+    <fragment
+        android:id="@+id/OnboardingFragmentStep2"
+        android:name="com.meticulous.homeapp.onboarding.OnboardingStepTwoFragment"
+        android:label="@string/onboarding_fragment_label"
+        tools:layout="@layout/fragment_onboarding">
+
+        <action
+            android:id="@+id/action_Step2Fragment_to_Step3Fragment"
+            app:destination="@id/OnboardingFragmentStep3" />
+    </fragment>
+    <fragment
+        android:id="@+id/OnboardingFragmentStep3"
+        android:name="com.meticulous.homeapp.onboarding.OnboardingStepThreeFragment"
+        android:label="@string/onboarding_fragment_label"
+        tools:layout="@layout/fragment_onboarding">
+    </fragment>
+</navigation>

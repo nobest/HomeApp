@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.meticulous.homeapp.home.HomeFragment"
+        android:label=""
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_HomeFragment_to_AppDrawerFragment"
+            app:destination="@id/AppDrawerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AppDrawerFragment"
+        android:name="com.meticulous.homeapp.home.AppDrawerFragment"
+        android:label=""
+        tools:layout="@layout/fragment_app_drawer">
+
+        <action
+            android:id="@+id/action_AppDrawerFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+    </fragment>
+
+</navigation>
