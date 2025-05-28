@@ -46,7 +46,6 @@ class AppDrawerFragment : Fragment() {
         context.packageManager.getLaunchIntentForPackage(app.packageName)?.also { intent ->
             context.startActivity(intent)
         }
-//        requireActivity().finish()
     }
 
     override fun onDestroy() {

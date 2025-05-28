@@ -62,21 +62,3 @@ private fun queryInstalledAppsPostTIRAMISU(
         )
     }.sortedBy { it.appName }
 }
-
-/***
- * Checks if the current app is set as the default home app
- */
-fun isHomeAppSetAsDefault(context: Context): Boolean {
-    logD(message = "Utils.isHomeAppSetAsDefault called")
-    val intent = Intent(Intent.ACTION_MAIN).also {
-        it.addCategory(Intent.CATEGORY_HOME)
-    }
-    val resolveInfo =
-        context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
-    val defaultHomeApp = resolveInfo?.activityInfo?.packageName
-    logI(message = "Utils.defaultHomeApp: $defaultHomeApp")
-    logI(message = "Utils My HomeApp packageName: ${context.packageName}")
-    val isSetAsDefault = resolveInfo?.activityInfo?.packageName == context.packageName
-    logI(message = "Utils.defaultHomeApp: $defaultHomeApp")
-    return isSetAsDefault
-}

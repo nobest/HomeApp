@@ -6,8 +6,7 @@ import androidx.core.content.edit
 
 
 private const val onBoardingSharedPrefFile = "onBoardingSharedPrefFile"
-private const val onBoardingSharedPrefKey = "onBoardingSharedPrefKey"
-private const val changeHomeUserInitiationPrefKey = "changeHomeUserInitiationPrefKey"
+private const val onBoardingStatePrefKey = "onBoardingStatePrefKey"
 
 /**
  * Saves the onboarding state to the shared preferences
@@ -17,11 +16,11 @@ private const val changeHomeUserInitiationPrefKey = "changeHomeUserInitiationPre
  * @param onboardingState The state of the onboarding
  * @return Unit
  * */
-fun saveOnboardingStateToSharedPreference(context: Context, onboardingState: Boolean) {
+fun saveOnboardingStateToSharedPreference(context: Context, onboardingState: String) {
     logI(message = "Utils.saveOnboardingStateToSharedPreference onboardingState: $onboardingState")
     val sharedPreferences = context.getSharedPreferences(onBoardingSharedPrefFile, MODE_PRIVATE)
     sharedPreferences.edit {
-        putBoolean(onBoardingSharedPrefKey, onboardingState)
+        putString(onBoardingStatePrefKey, onboardingState)
     }
 }
 
@@ -29,26 +28,12 @@ fun saveOnboardingStateToSharedPreference(context: Context, onboardingState: Boo
  * Reads the onboarding state from the shared preferences
  *
  * @param context The context of the application
- * @return Boolean True if the user had completed the onboarding process, false otherwise
+ * @return String that represent the state of the onboarding process
  * */
-fun getOnboardingStateFromSharedPref(context: Context): Boolean {
+fun getOnboardingStateFromSharedPreference(context: Context): String {
     val sharedPreferences = context.getSharedPreferences(onBoardingSharedPrefFile, MODE_PRIVATE)
-    val onboardingState = sharedPreferences.getBoolean(onBoardingSharedPrefKey, false)
-    logI(message = "Utils.readOnboardingStateFromSharedPref onboardingState: $onboardingState")
-    return onboardingState
-}
-
-fun saveUserInitiatedChangeHomePreference(context: Context, userInitiated: Boolean) {
-    logI(message = "Utils.saveUserInitiatedChangeHomePreference onboardingState: $userInitiated")
-    val sharedPreferences = context.getSharedPreferences(onBoardingSharedPrefFile, MODE_PRIVATE)
-    sharedPreferences.edit {
-        putBoolean(changeHomeUserInitiationPrefKey, userInitiated)
-    }
-}
-
-fun getUserInitiatedChangeHomePreference(context: Context): Boolean {
-    val sharedPreferences = context.getSharedPreferences(onBoardingSharedPrefFile, MODE_PRIVATE)
-    val onboardingState = sharedPreferences.getBoolean(changeHomeUserInitiationPrefKey, false)
-    logI(message = "Utils.getUserInitiatedChangeHomePreference onboardingState: $onboardingState")
-    return onboardingState
+    val onboardingState =
+        sharedPreferences.getString(onBoardingStatePrefKey, OnboardingState.NOT_STARTED.state)
+    logI(message = "Utils.getOnboardingStateFromSharedPreference onboardingState: $onboardingState")
+    return onboardingState ?: OnboardingState.NOT_STARTED.state
 }

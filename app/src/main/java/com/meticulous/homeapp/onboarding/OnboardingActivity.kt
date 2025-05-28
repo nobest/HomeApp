@@ -6,10 +6,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.meticulous.homeapp.databinding.ActivityOnboardingBinding
 import com.meticulous.homeapp.home.HomeActivity
-import com.meticulous.homeapp.util.isHomeAppSetAsDefault
+import com.meticulous.homeapp.util.OnboardingManager
 import com.meticulous.homeapp.util.logD
 import com.meticulous.homeapp.util.logI
-import com.meticulous.homeapp.util.getOnboardingStateFromSharedPref
 
 class OnboardingActivity : AppCompatActivity() {
 
@@ -19,9 +18,7 @@ class OnboardingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         logI(message = "OnboardingActivity onCreate called")
-        val onboardingProcessComplete = getOnboardingStateFromSharedPref(this)
-        logI(message = "OnboardingActivity onCreate onboardingProcessComplete: $onboardingProcessComplete")
-        if (isHomeAppSetAsDefault(this) && onboardingProcessComplete) {
+        if (!OnboardingManager.shouldShowOnboarding(applicationContext)) {
             logD(message = "OnboardingActivity onCreate HomeApp set default, opening HomeActivity")
             openHomeActivity()
             finish()

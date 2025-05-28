@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.meticulous.homeapp.R
+import com.meticulous.homeapp.util.OnboardingManager
 
 class OnboardingStepThreeFragment : Fragment() {
 
@@ -18,5 +19,10 @@ class OnboardingStepThreeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_onboarding_step_three, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        OnboardingManager.markOnboardingComplete(requireContext().applicationContext)
     }
 }
