@@ -17,19 +17,13 @@
         <activity
             android:name=".home.HomeActivity"
             android:exported="false"
-            android:theme="@style/Theme.HomeApp">
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.HomeApp" />
 
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--                <category android:name="android.intent.category.HOME" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--            </intent-filter>-->
-        </activity>
         <activity
             android:name=".onboarding.OnboardingActivity"
             android:exported="true"
+            android:launchMode="singleInstance"
             android:theme="@style/Theme.HomeApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
