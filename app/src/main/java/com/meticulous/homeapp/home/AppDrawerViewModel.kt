@@ -14,8 +14,8 @@ import com.meticulous.homeapp.util.queryInstalledApps
 class AppDrawerViewModel(val app: Application) : AndroidViewModel(app) {
     // Bind this to the serachView for the apps and it should work seamlessly
     // The filtering process has been implemented already
-    private val _searchQuery: LiveData<String> = MutableLiveData("")
-    val searchQuery: LiveData<String> = _searchQuery
+    private val _searchQuery: MutableLiveData<String> = MutableLiveData("")
+    private val searchQuery: LiveData<String> = _searchQuery
 
     private val _installedApps: MutableLiveData<List<App>> = MutableLiveData()
     val installedApps: LiveData<List<App>> = _installedApps
@@ -44,5 +44,9 @@ class AppDrawerViewModel(val app: Application) : AndroidViewModel(app) {
         val withoutHomeApp = apps.filter { it.packageName != app.baseContext.packageName }
         logD(message = "getInstalledApps return: ${apps.size} apps")
         _installedApps.value = withoutHomeApp
+    }
+
+    fun onSearchQueryChanged(newQuery: String) {
+        _searchQuery.value = newQuery
     }
 }
