@@ -18,6 +18,7 @@
         <activity
             android:name=".home.presentation.HomeActivity"
             android:exported="false"
+            android:launchMode="singleInstance"
             android:theme="@style/Theme.HomeApp" />
 
         <activity
