@@ -1,4 +1,4 @@
-package com.meticulous.homeapp.home.model
+package com.meticulous.homeapp.home.domain
 
 import android.graphics.drawable.Drawable
 

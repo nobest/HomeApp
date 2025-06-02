@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="com.meticulous.homeapp.home.HomeFragment"
+        android:name="com.meticulous.homeapp.home.presentation.HomeFragment"
         android:label=""
         tools:layout="@layout/fragment_home">
 
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/AppDrawerFragment"
-        android:name="com.meticulous.homeapp.home.AppDrawerFragment"
+        android:name="com.meticulous.homeapp.home.presentation.AppDrawerFragment"
         android:label=""
         tools:layout="@layout/fragment_app_drawer">
 

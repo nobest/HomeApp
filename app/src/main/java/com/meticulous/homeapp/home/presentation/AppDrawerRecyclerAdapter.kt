@@ -1,4 +1,4 @@
-package com.meticulous.homeapp.home
+package com.meticulous.homeapp.home.presentation
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.meticulous.homeapp.R
-import com.meticulous.homeapp.home.model.App
+import com.meticulous.homeapp.home.domain.App
 
 
 class AppDrawerRecyclerAdapter(val apps: List<App>, val onAppClick: (App) -> Unit) :
