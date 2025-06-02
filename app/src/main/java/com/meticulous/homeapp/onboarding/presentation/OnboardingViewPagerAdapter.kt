@@ -1,4 +1,4 @@
-package com.meticulous.homeapp.onboarding
+package com.meticulous.homeapp.onboarding.presentation
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

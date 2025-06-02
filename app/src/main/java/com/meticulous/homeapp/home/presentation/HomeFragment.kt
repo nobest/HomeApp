@@ -1,4 +1,4 @@
-package com.meticulous.homeapp.home
+package com.meticulous.homeapp.home.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.meticulous.homeapp.R
 import com.meticulous.homeapp.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null

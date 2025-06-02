@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/OnboardingFragment"
-        android:name="com.meticulous.homeapp.onboarding.OnboardingFragment"
+        android:name="com.meticulous.homeapp.onboarding.presentation.OnboardingFragment"
         android:label="@string/onboarding_fragment_label"
         tools:layout="@layout/fragment_onboarding">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/OnboardingFragmentStep1"
-        android:name="com.meticulous.homeapp.onboarding.OnboardingStepOneFragment"
+        android:name="com.meticulous.homeapp.onboarding.presentation.OnboardingStepOneFragment"
         android:label="@string/onboarding_fragment_label"
         tools:layout="@layout/fragment_onboarding">
 
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/OnboardingFragmentStep2"
-        android:name="com.meticulous.homeapp.onboarding.OnboardingStepTwoFragment"
+        android:name="com.meticulous.homeapp.onboarding.presentation.OnboardingStepTwoFragment"
         android:label="@string/onboarding_fragment_label"
         tools:layout="@layout/fragment_onboarding">
 
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/OnboardingFragmentStep3"
-        android:name="com.meticulous.homeapp.onboarding.OnboardingStepThreeFragment"
+        android:name="com.meticulous.homeapp.onboarding.presentation.OnboardingStepThreeFragment"
         android:label="@string/onboarding_fragment_label"
         tools:layout="@layout/fragment_onboarding">
     </fragment>

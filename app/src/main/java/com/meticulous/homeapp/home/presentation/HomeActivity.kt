@@ -1,4 +1,4 @@
-package com.meticulous.homeapp.home
+package com.meticulous.homeapp.home.presentation
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
@@ -10,9 +10,10 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.meticulous.homeapp.R
 import com.meticulous.homeapp.databinding.ActivityHomeBinding
-import com.meticulous.homeapp.util.logI
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
 
@@ -44,8 +45,6 @@ class HomeActivity : AppCompatActivity() {
         // If the user is on the App Drawer page and click the back button we close the app drawer
         // to go back to the Home fragment which is the device dashboard
         if (currentView == R.id.AppDrawerFragment) {
-            logI(message = "HomeActivity.handleBackPressed called")
-            logI(message = "HomeActivity: Moving from DrawerFragment to HomeFragment")
             navController.navigateUp()
         }
     }

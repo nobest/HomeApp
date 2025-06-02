@@ -1,4 +1,4 @@
-package com.meticulous.homeapp.onboarding
+package com.meticulous.homeapp.onboarding.presentation
 
 import android.app.Activity
 import android.content.Intent
@@ -14,18 +14,21 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.meticulous.homeapp.R
 import com.meticulous.homeapp.databinding.FragmentOnboardingBinding
-import com.meticulous.homeapp.home.HomeActivity
-import com.meticulous.homeapp.util.logD
-import com.meticulous.homeapp.util.logE
-import com.meticulous.homeapp.util.logI
+import com.meticulous.homeapp.home.presentation.HomeActivity
+import com.meticulous.homeapp.util.AnalyticLogger
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+@AndroidEntryPoint
 class OnboardingFragment : Fragment() {
 
     private var _binding: FragmentOnboardingBinding? = null
@@ -37,6 +40,9 @@ class OnboardingFragment : Fragment() {
 
     lateinit var changeSetting: ActivityResultLauncher<Intent>
 
+    @Inject
+    lateinit var logger: AnalyticLogger
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,10 +50,10 @@ class OnboardingFragment : Fragment() {
             ActivityResultContracts.StartActivityForResult(),
             object : ActivityResultCallback<ActivityResult> {
                 override fun onActivityResult(result: ActivityResult) {
-                    logD("OnboardingFragment registerForActivityResult result : $result")
+                    logger.logDebug("OnboardingFragment registerForActivityResult result : $result")
                     // If user cancel change home app process, we update the process cancelled
                     if (result.resultCode == Activity.RESULT_CANCELED) {
-                        viewModel.onWaitingUserActionCancelled(requireContext().applicationContext)
+                        viewModel.onWaitingUserActionCancelled()
                     }
                 }
             }
@@ -78,69 +84,54 @@ class OnboardingFragment : Fragment() {
         // the Next button and this prevent backward navigation
         binding.onboardingViewPager.isUserInputEnabled = false
 
-        observeNextDestination()
-
         return binding.root
     }
 
-    // Observe the next destination to navigate to the appropriate page on the app
-    private fun observeNextDestination() {
-        viewModel.currentDestination.observe(viewLifecycleOwner) {
-            when (it) {
-                Destination.ONBOARDING_FIRST_STEP -> {
-                    logI(message = "OnboardingFragment.observeNextDestination Destination.ONBOARDING_FIRST_STEP")
-                    if (binding.onboardingViewPager.currentItem != OnboardingViewModel.ONBOARDING_FIRST_STEP) {
-                        navigateToFirstOnboardingPage()
-                    }
-                }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("current_page", binding.onboardingViewPager.currentItem)
+    }
 
-                Destination.ONBOARDING_SECOND_STEP -> {
-                    logI(message = "OnboardingFragment.observeNextDestination Destination.ONBOARDING_SECOND_STEP")
-                    navigateToSecondOnboardingPage()
-                }
-
-                Destination.ONBOARDING_THIRD_STEP -> {
-                    logI(message = "OnboardingFragment.observeNextDestination Destination.ONBOARDING_THIRD_STEP")
-                    navigateToThirdOnboardingPage()
-                }
-
-                Destination.HOME_ACTIVITY -> {
-                    logI(message = "OnboardingFragment.observeNextDestination Destination.HOME_ACTIVITY")
-                    openHomeActivity()
-                }
-
-                Destination.ONBOARDING_AWAITING_USER_ACTION -> {
-                    logI(message = "OnboardingFragment.observeNextDestination Destination.ONBOARDING_AWAITING_USER_ACTION")
-                    openHomeScreenSettings()
-                }
-
-                Destination.UNKNOWN -> {
-                    logI(message = "OnboardingFragment.observeNextDestination Destination.UNKNOWN")
+    private fun handleUiState(state: OnboardingUiState) {
+        logger.logInfo(message = "OnboardingFragment handleUiState called with state : $state")
+        when (state) {
+            OnboardingUiState.FirstStep -> {
+                if (binding.onboardingViewPager.currentItem != OnboardingViewModel.ONBOARDING_FIRST_STEP) {
+                    navigateToFirstOnboardingPage()
                 }
             }
+
+            OnboardingUiState.SecondStep -> {
+                navigateToSecondOnboardingPage()
+            }
+
+            OnboardingUiState.ThirdStep -> {
+                navigateToThirdOnboardingPage()
+            }
+
+            OnboardingUiState.AwaitingUserAction -> {
+                openHomeScreenSettings()
+                viewModel.updateWaitingUserAction()
+            }
+
+            OnboardingUiState.HomeActivity -> {
+                openHomeActivity()
+            }
+
+            OnboardingUiState.Unknown -> {}
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnNext.setOnClickListener {
-            val currentValue = binding.onboardingViewPager.currentItem
-            when (currentValue) {
-                OnboardingViewModel.ONBOARDING_FIRST_STEP -> {
-                    viewModel.onFirstStepNextClicked()
-                }
 
-                OnboardingViewModel.ONBOARDING_SECOND_STEP -> {
-                    viewModel.onSecondStepNextClicked()
-                    viewModel.updateWaitingUserAction(requireContext().applicationContext)
-                }
-
-                OnboardingViewModel.ONBOARDING_LAST_STEP -> {
-                    viewModel.onThirdStepNextClicked()
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                handleUiState(state)
             }
-
         }
+
+        setupContinueButton()
 
         binding.onboardingViewPager.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
@@ -155,29 +146,50 @@ class OnboardingFragment : Fragment() {
         })
     }
 
+    private fun setupContinueButton() {
+        binding.btnNext.setOnClickListener {
+            val currentValue = binding.onboardingViewPager.currentItem
+            when (currentValue) {
+                OnboardingViewModel.ONBOARDING_FIRST_STEP -> {
+                    viewModel.onFirstStepNextClicked()
+                }
+
+                OnboardingViewModel.ONBOARDING_SECOND_STEP -> {
+                    logger.logInfo(message = "OnboardingFragment ONBOARDING_SECOND_STEP continue button clicked")
+                    viewModel.onSecondStepNextClicked()
+                }
+
+                OnboardingViewModel.ONBOARDING_LAST_STEP -> {
+                    viewModel.onThirdStepNextClicked()
+                }
+            }
+
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        logI(message = "OnboardingFragment onResume called")
-        viewModel.onViewResumed(requireContext())
+        logger.logInfo(message = "OnboardingFragment onResume called")
+        viewModel.onViewResumed()
     }
 
     private fun navigateToFirstOnboardingPage() {
-        logI(message = "OnboardingFragment.navigateToFirstOnboardingPage called")
+        logger.logInfo(message = "OnboardingFragment.navigateToFirstOnboardingPage called")
         binding.onboardingViewPager.currentItem = OnboardingViewModel.ONBOARDING_FIRST_STEP
     }
 
     private fun navigateToSecondOnboardingPage() {
-        logI(message = "OnboardingFragment.navigateToSecondOnboardingPage called")
+        logger.logInfo(message = "OnboardingFragment.navigateToSecondOnboardingPage called")
         binding.onboardingViewPager.currentItem = OnboardingViewModel.ONBOARDING_SECOND_STEP
     }
 
     private fun navigateToThirdOnboardingPage() {
-        logI(message = "OnboardingFragment.navigateToThirdOnboardingPage called")
+        logger.logInfo(message = "OnboardingFragment.navigateToThirdOnboardingPage called")
         binding.onboardingViewPager.currentItem = OnboardingViewModel.ONBOARDING_LAST_STEP
     }
 
     private fun openHomeActivity() {
-        logI(message = "OnboardingFragment.openHomeActivity called")
+        logger.logInfo(message = "OnboardingFragment.openHomeActivity called")
         val intent = Intent(requireContext(), HomeActivity::class.java)
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
@@ -185,7 +197,7 @@ class OnboardingFragment : Fragment() {
     }
 
     private fun openHomeScreenSettings(): Boolean {
-        logI(message = "OnboardingFragment.openHomeScreenSettings called")
+        logger.logInfo(message = "OnboardingFragment.openHomeScreenSettings called")
         return try {
             val intent = Intent().also {
                 it.action = Settings.ACTION_HOME_SETTINGS
@@ -193,7 +205,7 @@ class OnboardingFragment : Fragment() {
             changeSetting.launch(intent)
             true
         } catch (e: Exception) {
-            logE(message = e.localizedMessage.orEmpty(), e)
+            logger.logError(message = e.localizedMessage.orEmpty(), e)
             e.printStackTrace()
             false
         }

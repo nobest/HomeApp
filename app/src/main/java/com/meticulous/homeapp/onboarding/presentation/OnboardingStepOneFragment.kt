@@ -1,4 +1,4 @@
-package com.meticulous.homeapp.onboarding
+package com.meticulous.homeapp.onboarding.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.meticulous.homeapp.R
-import com.meticulous.homeapp.util.OnboardingManager
 
 class OnboardingStepOneFragment : Fragment() {
 
@@ -23,6 +22,5 @@ class OnboardingStepOneFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        OnboardingManager.setOnboardingStartedStage1(requireContext().applicationContext)
     }
 }
